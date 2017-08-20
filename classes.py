@@ -79,7 +79,7 @@ class baseFrame(QMainWindow):
     def hideOrShow(self):
         if self.isHidden():
             self.show()
-            raiseWindow("qTranslater")
+            raiseWindow("qTranslater", self)
 
             self.setGeometry(300, 300, 400, 200)
             self.mainWidget.contentEdit.clear()

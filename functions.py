@@ -3,6 +3,7 @@ from getToken import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 import requests
+import keyboard
 import pygame
 import json
 import win32gui
@@ -12,7 +13,19 @@ def rshift(val, n):
     return (val % 0x100000000) >> n
 
 
+def lockApplication(topFrame):
+    print("clear done")
+    keyboard.clear_all_hotkeys()
+
+
+def unlockApplication(topFrame):
+    print("resumed")
+    keyboard.add_hotkey("Ctrl+Space", topFrame.hideOrShow)
+
+
 def query(fatherFrame, topFrame):
+    lockApplication(topFrame)
+
     text = fatherFrame.contentEdit.text()
     fatherFrame.currentWord = text
     resultShow = fatherFrame.resultShow
@@ -52,10 +65,14 @@ def query(fatherFrame, topFrame):
 
     resultShow.setText(textDisplay)
 
+    unlockApplication(topFrame)
+
 
 def pronounce(fatherFrame, topFrame):
     if fatherFrame.currentWord != fatherFrame.contentEdit.text():
         query(fatherFrame, topFrame)
+
+    lockApplication(topFrame)
 
     text = fatherFrame.contentEdit.text()
 
@@ -84,9 +101,15 @@ def pronounce(fatherFrame, topFrame):
     except:
         topFrame.statusBar().showMessage("Can't pronounce this word.", 2000)
 
+    unlockApplication(topFrame)
 
-def raiseWindow(name):
+
+def raiseWindow(name, topFrame):
+    lockApplication(topFrame)
+
     print("raiseing windows...")
     windowID = win32gui.FindWindow(None, name)
     win32gui.SetForegroundWindow(windowID)
     print("raiseing done")
+
+    unlockApplication(topFrame)
