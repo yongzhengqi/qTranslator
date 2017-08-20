@@ -9,6 +9,10 @@ import json
 import win32gui
 
 
+def noOtherExamplesRunning():
+    windowID = win32gui.FindWindow('Qt5QWindowIcon', "qTranslater")
+    return windowID == 0
+
 def rshift(val, n):
     return (val % 0x100000000) >> n
 
@@ -108,7 +112,7 @@ def raiseWindow(name, topFrame):
     lockApplication(topFrame)
 
     print("raiseing windows...")
-    windowID = win32gui.FindWindow(None, name)
+    windowID = win32gui.FindWindow('Qt5QWindowIcon', name)
     win32gui.SetForegroundWindow(windowID)
     print("raiseing done")
 
