@@ -85,18 +85,8 @@ def pronounce(fatherFrame, topFrame):
         topFrame.statusBar().showMessage("Can't pronounce this word.", 2000)
 
 
-def raiseWindowProcess(name):
-    try:
-        windowID = win32gui.FindWindow(None, name)
-        win32gui.SetForegroundWindow(windowID)
-        return True
-    except:
-        return False
-
-
 def raiseWindow(name):
     print("raiseing windows...")
-    while (raiseWindowProcess(name) == 0):
-        pass
-
+    windowID = win32gui.FindWindow(None, name)
+    win32gui.SetForegroundWindow(windowID)
     print("raiseing done")
