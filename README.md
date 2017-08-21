@@ -1,6 +1,9 @@
 # qTranslater
 A simple software to translate English to Chinese on windows.
 
+## Get this app
+Download `qTranslater.zip` on https://github.com/yongzhengqi/qTranslater/releases
+
 ## Usage
 1. Click `qTranslater.exe` to start this program.
 2. Enter `Ctrl + Space` to call out the query window
