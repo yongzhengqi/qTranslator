@@ -6,16 +6,17 @@ import requests
 import keyboard
 import pygame
 import json
+import time
 import win32gui
 
-
-def noOtherExamplesRunning():
-    windowID = win32gui.FindWindow('Qt5QWindowIcon', "qTranslater")
-    return windowID == 0
 
 def rshift(val, n):
     return (val % 0x100000000) >> n
 
+
+def updateDialogStatus(targetClass):
+    time.sleep(0.2)
+    targetClass.noDialogRunning = 1
 
 def lockApplication(topFrame):
     print("clear done")
@@ -28,8 +29,6 @@ def unlockApplication(topFrame):
 
 
 def query(fatherFrame, topFrame):
-    lockApplication(topFrame)
-
     text = fatherFrame.contentEdit.text()
     fatherFrame.currentWord = text
     resultShow = fatherFrame.resultShow
@@ -69,14 +68,10 @@ def query(fatherFrame, topFrame):
 
     resultShow.setText(textDisplay)
 
-    unlockApplication(topFrame)
-
 
 def pronounce(fatherFrame, topFrame):
     if fatherFrame.currentWord != fatherFrame.contentEdit.text():
         query(fatherFrame, topFrame)
-
-    lockApplication(topFrame)
 
     text = fatherFrame.contentEdit.text()
 
@@ -105,15 +100,22 @@ def pronounce(fatherFrame, topFrame):
     except:
         topFrame.statusBar().showMessage("Can't pronounce this word.", 2000)
 
-    unlockApplication(topFrame)
+
+def raiseWindowPro(name):
+    print("calling win32 api...")
+    try:
+        windowID = win32gui.FindWindow('Qt5QWindowIcon', name)
+        print("windowID is", windowID)
+        win32gui.SetForegroundWindow(windowID)
+        return 1
+    except:
+        return 0
 
 
 def raiseWindow(name, topFrame):
-    lockApplication(topFrame)
-
     print("raiseing windows...")
-    windowID = win32gui.FindWindow('Qt5QWindowIcon', name)
-    win32gui.SetForegroundWindow(windowID)
-    print("raiseing done")
 
-    unlockApplication(topFrame)
+    while raiseWindowPro(name) == 0:
+        time.sleep(0.01)
+
+    print("raiseing done")
