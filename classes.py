@@ -21,6 +21,9 @@ class QizyLineEdit(QLineEdit):
         self.topFrameTmp = topFrame
 
     def focusOutEvent(self, QFocusEvent):
+        while self.topFrameTmp.processRunning:
+            print(self.topFrameTmp.processRunning)
+
         import threading
         process = threading.Thread(target=updateDialogStatus, args=(self.topFrameTmp.parent,))
         process.start()
@@ -35,12 +38,13 @@ class mainWidgets(QDialog):
 
         self.parent = parent
         self.parent.noDialogRunning = 0
+        self.processRunning = 1
 
         self.initWidgets()
 
-        self.initShortCuts()
-
         self.initWindow()
+
+        self.initShortCuts()
 
         if getSelectedWord:
             clipboard = QGuiApplication.clipboard()
@@ -48,6 +52,8 @@ class mainWidgets(QDialog):
             self.contentEdit.setText(clipboard.text())
 
             self.query()
+
+        self.processRunning = self.processRunning - 1
 
     def initWindow(self):
         self.setWindowFlags(Qt.FramelessWindowHint)
@@ -96,14 +102,20 @@ class mainWidgets(QDialog):
         self.setLayout(self.MainGrid)
 
     def raiseWindow(self):
+        self.processRunning = self.processRunning + 1
+
         try:
             windowID = win32gui.FindWindow(None, "qTranslater - Dialog")
             win32gui.SetForegroundWindow(windowID)
+            self.processRunning = self.processRunning - 1
             return True
         except:
+            self.processRunning = self.processRunning - 1
             return False
 
     def pronounce(self):
+        self.processRunning = self.processRunning + 1
+
         if self.currentWord != self.contentEdit.text():
             self.query()
 
@@ -129,7 +141,11 @@ class mainWidgets(QDialog):
         except:
             print("pronounce failed")
 
+        self.processRunning = self.processRunning - 1
+
     def query(self):
+        self.processRunning = self.processRunning + 1
+
         text = self.contentEdit.text()
         self.currentWord = text
 
@@ -163,6 +179,8 @@ class mainWidgets(QDialog):
             textDisplay = "Words Not Found"
 
         self.resultShow.setText(textDisplay)
+
+        self.processRunning = self.processRunning - 1
 
 
 class backgroundProgram(QMainWindow):
@@ -207,13 +225,17 @@ class backgroundProgram(QMainWindow):
             MainProg.exec_()
 
     def AboutThisProject(self):
-        AboutPageDialog = AboutPage()
-        AboutPageDialog.exec_()
+        if self.noDialogRunning:
+            AboutPageDialog = AboutPage(self)
+            AboutPageDialog.exec_()
 
 
 class AboutPage(QDialog):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super(AboutPage, self).__init__()
+
+        self.parent = parent
+        self.parent.noDialogRunning = 0
 
         self.setWindowTitle("About qTranslater")
         self.setWindowIcon(QIcon("icon.ico"))
@@ -239,3 +261,8 @@ class AboutPage(QDialog):
         GridLayout.addWidget(ProjectLicenseGuide, 2, 1)
         GridLayout.addWidget(ProjectLicense, 2, 2)
         GridLayout.addWidget(ExitButton, 3, 1, 1, 3)
+
+        self.show()
+
+    def hideEvent(self, QHideEvent):
+        self.parent.noDialogRunning = 1

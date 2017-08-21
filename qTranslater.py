@@ -13,4 +13,3 @@ if __name__ == "__main__":
     MainProg = backgroundProgram()
 
     sys.exit(app.exec_())
-
