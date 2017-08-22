@@ -61,7 +61,7 @@ class mainWidgets(QDialog):
         self.setWindowTitle("qTranslater - Dialog")
 
         self.show()
-        self.activateWindow()
+        #self.activateWindow()
 
         while self.raiseWindow() == False:
             print("calling win32gui api failed")
@@ -77,8 +77,6 @@ class mainWidgets(QDialog):
         self.closeCurrentDialogAction.activated.connect(self.hide)
 
     def initWidgets(self):
-        contentLabel = QLabel("Words：")
-
         self.currentWord = ""
 
         self.resultShow = QLabel()
@@ -87,17 +85,11 @@ class mainWidgets(QDialog):
         self.contentEdit.returnPressed.connect(self.query)
         self.contentEdit.setFocus()
 
-        speakButton = QPushButton("pronounce")
-        speakButton.setFocusPolicy(Qt.NoFocus)
-        speakButton.clicked.connect(self.pronounce)
-
         self.MainGrid = QGridLayout()
         self.MainGrid.setSpacing(10)
 
-        self.MainGrid.addWidget(contentLabel, 1, 1)
-        self.MainGrid.addWidget(self.contentEdit, 1, 2)
-        self.MainGrid.addWidget(speakButton, 1, 3)
-        self.MainGrid.addWidget(self.resultShow, 2, 1, 1, 3)
+        self.MainGrid.addWidget(self.contentEdit, 1, 1)
+        self.MainGrid.addWidget(self.resultShow, 2, 1)
 
         self.setLayout(self.MainGrid)
 
@@ -217,9 +209,14 @@ class backgroundProgram(QMainWindow):
 
     def showDialogWithSelectedWord(self):
         if self.noDialogRunning:
-            time.sleep(0.3)
+            time.sleep(0.2)
 
-            keyboard.press_and_release("Ctrl+C")
+            try:
+                keyboard.press_and_release("Ctrl+C")
+            except:
+                print("calling keyboard api failed...")
+
+            time.sleep(0.1)
 
             MainProg = mainWidgets(self, 1)
             MainProg.exec_()
