@@ -1,8 +1,9 @@
-# qTranslater
+# qTranslator
 A simple software to translate English to Chinese on windows.
+![qTranslator](https://oi.qizy.tech/wp-content/uploads/2017/07/2738236487324.png)
 
 ## Get this app
-Download `qTranslater.zip` on https://github.com/yongzhengqi/qTranslater/releases
+Download `qTranslater.zip` on https://github.com/yongzhengqi/qTranslator/releases
 
 ## Usage
 1. Click `qTranslater.exe` to start this program.
@@ -19,7 +20,7 @@ This application is based on python.
 It get the information from "translate.google.cn". 
 
 ## Enjoy it
-The page of this project: https://github.com/yongzhengqi/qTranslater
+The page of this project: https://github.com/yongzhengqi/qTranslator
 
 If you meet something wrong please open an issue on the project page.
 
